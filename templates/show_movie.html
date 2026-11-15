@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block content %}
+<h2>{{ movie.title }} ({{ movie.release_year }})</h2>
+
+<p>{{ movie.description }}</p>
+
+<p>Lisääjä: <a href="/user/{{ movie.user_id }}">{{ movie.username }}</a></p>
+<p><a href="/">Takaisin listaan</a></p>
+{% endblock %}

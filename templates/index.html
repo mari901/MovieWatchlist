@@ -3,8 +3,18 @@
 {% block title %}Movie Watchlist{% endblock %}
 
 {% block content %}
-<h2>Etusivu</h2>
-{% if session.user_id %}
-<p>Olet kirjautunut nimellä {{ session.username }}</p>
-{% endif %}
+<h2>Elokuvat</h2>
+
+{% for movie in movies %}
+<div class="thread">
+  <p>
+    <a href="/movie/{{ movie.id }}">{{ movie.title }}</a> ({{ movie.release_year }})
+  </p>
+  <p>
+    Lisääjä: <a href="/user/{{ movie.user_id }}">{{ movie.username }}</a>
+  </p>
+</div>
+{% else %}
+<p>Ei vielä elokuvia.</p>
+{% endfor %}
 {% endblock %}
