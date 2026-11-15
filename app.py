@@ -26,10 +26,15 @@ def parse_classes(entries):
     classes = []
     for entry in entries:
         if entry:
-            class_title, class_value = entry.split(":")
+            parts = entry.split(":")
+            if len(parts) != 2:
+                abort(403)
+            class_title, class_value = parts
             if class_title not in all_classes:
                 abort(403)
             if class_value not in all_classes[class_title]:
+                abort(403)
+            if (class_title, class_value) in classes:
                 abort(403)
             classes.append((class_title, class_value))
     return classes
