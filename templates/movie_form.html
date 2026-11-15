@@ -15,7 +15,12 @@
   {% for class in all_classes %}
   <p>
     <label for="class{{ class }}">{{ class }}</label>: <br />
+    {% if class in multi_value_classes %}
     <select name="classes" id="class{{ class }}" multiple>
+    {% else %}
+    <select name="classes" id="class{{ class }}">
+      <option value="">(choose)</option>
+    {% endif %}
       {% for option in all_classes[class] %}
       <option value="{{ class }}:{{ option }}" {% if class ~ ":" ~ option in selected %}selected{% endif %}>{{ option }}</option>
       {% endfor %}

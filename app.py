@@ -11,6 +11,8 @@ import users
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
+MULTI_VALUE_CLASSES = ["Genre"]
+
 def require_login():
     if "user_id" not in session:
         abort(403)
@@ -35,6 +37,9 @@ def parse_classes(entries):
             if class_value not in all_classes[class_title]:
                 abort(403)
             if (class_title, class_value) in classes:
+                abort(403)
+            used_titles = [title for title, value in classes]
+            if class_title in used_titles and class_title not in MULTI_VALUE_CLASSES:
                 abort(403)
             classes.append((class_title, class_value))
     return classes
@@ -76,7 +81,8 @@ def show_movie(movie_id):
 def new_movie():
     require_login()
     all_classes = movies.get_all_classes()
-    return render_template("new_movie.html", all_classes=all_classes)
+    return render_template("new_movie.html", all_classes=all_classes,
+                           multi_value_classes=MULTI_VALUE_CLASSES)
 
 @app.route("/create_movie", methods=["POST"])
 def create_movie():
@@ -110,7 +116,8 @@ def edit_movie(movie_id):
         for entry in movies.get_classes(movie_id):
             selected.add(entry["title"] + ":" + entry["value"])
         return render_template("edit_movie.html", movie=movie,
-                               all_classes=all_classes, selected=selected)
+                               all_classes=all_classes, selected=selected,
+                               multi_value_classes=MULTI_VALUE_CLASSES)
 
     if request.method == "POST":
         check_csrf()
