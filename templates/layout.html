@@ -17,6 +17,9 @@
         <li><a href="/">Etusivu</a></li>
         <li><a href="/register">Luo tunnus</a></li>
         {% if session.user_id %}
+        <li><a href="/new_movie">Uusi elokuva</a></li>
+        {% endif %}
+        {% if session.user_id %}
         <li><a href="/logout">Kirjaudu ulos</a></li>
         {% else %}
         <li><a href="/login">Kirjaudu sisään</a></li>

@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block title %}Poista elokuva{% endblock %}
+
+{% block content %}
+<h2>Poista elokuva</h2>
+<p>Haluatko varmasti poistaa elokuvan {{ movie.title }}?</p>
+<form action="/remove_movie/{{ movie.id }}" method="post">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" name="continue" value="Jatka" />
+  <input type="submit" name="cancel" value="Peruuta" />
+</form>
+{% endblock %}

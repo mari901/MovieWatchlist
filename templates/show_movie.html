@@ -5,8 +5,20 @@
 {% block content %}
 <h2>{{ movie.title }} ({{ movie.release_year }})</h2>
 
+{% if session.user_id == movie.user_id %}
+<p>
+  <a href="/edit_movie/{{ movie.id }}">Muokkaa</a> |
+  <a href="/remove_movie/{{ movie.id }}">Poista</a>
+</p>
+{% endif %}
+
 <p>{{ movie.description }}</p>
 
-<p>Lisääjä: <a href="/user/{{ movie.user_id }}">{{ movie.username }}</a></p>
+<ul>
+  {% for entry in classes %}
+  <li>{{ entry.title }}: {{ entry.value }}</li>
+  {% endfor %}
+  <li>Lisääjä: <a href="/user/{{ movie.user_id }}">{{ movie.username }}</a></li>
+</ul>
 <p><a href="/">Takaisin listaan</a></p>
 {% endblock %}

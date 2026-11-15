@@ -1,3 +1,4 @@
+import re
 import secrets
 
 from flask import Flask
@@ -10,6 +11,39 @@ import users
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
+def require_login():
+    if "user_id" not in session:
+        abort(403)
+
+def check_csrf():
+    if "csrf_token" not in request.form:
+        abort(403)
+    if request.form["csrf_token"] != session["csrf_token"]:
+        abort(403)
+
+def parse_classes(entries):
+    all_classes = movies.get_all_classes()
+    classes = []
+    for entry in entries:
+        if entry:
+            class_title, class_value = entry.split(":")
+            if class_title not in all_classes:
+                abort(403)
+            if class_value not in all_classes[class_title]:
+                abort(403)
+            classes.append((class_title, class_value))
+    return classes
+
+def check_movie_fields(title, description, release_year):
+    if not title or len(title) > 100:
+        abort(403)
+    if not description or len(description) > 1000:
+        abort(403)
+    if not re.search("^[0-9]{4}$", release_year):
+        abort(403)
+    if not 1888 <= int(release_year) <= 2100:
+        abort(403)
+
 @app.route("/")
 def index():
     all_movies = movies.get_movies()
@@ -20,7 +54,80 @@ def show_movie(movie_id):
     movie = movies.get_movie(movie_id)
     if not movie:
         abort(404)
-    return render_template("show_movie.html", movie=movie)
+    classes = movies.get_classes(movie_id)
+    return render_template("show_movie.html", movie=movie, classes=classes)
+
+@app.route("/new_movie")
+def new_movie():
+    require_login()
+    all_classes = movies.get_all_classes()
+    return render_template("new_movie.html", all_classes=all_classes)
+
+@app.route("/create_movie", methods=["POST"])
+def create_movie():
+    require_login()
+    check_csrf()
+
+    title = request.form["title"]
+    description = request.form["description"]
+    release_year = request.form["release_year"]
+    check_movie_fields(title, description, release_year)
+    classes = parse_classes(request.form.getlist("classes"))
+
+    movie_id = movies.add_movie(title, description, int(release_year),
+                                session["user_id"], classes)
+    flash("Elokuva lisätty")
+    return redirect("/movie/" + str(movie_id))
+
+@app.route("/edit_movie/<int:movie_id>", methods=["GET", "POST"])
+def edit_movie(movie_id):
+    require_login()
+    movie = movies.get_movie(movie_id)
+    if not movie:
+        abort(404)
+    if movie["user_id"] != session["user_id"]:
+        abort(403)
+
+    all_classes = movies.get_all_classes()
+
+    if request.method == "GET":
+        selected = set()
+        for entry in movies.get_classes(movie_id):
+            selected.add(entry["title"] + ":" + entry["value"])
+        return render_template("edit_movie.html", movie=movie,
+                               all_classes=all_classes, selected=selected)
+
+    if request.method == "POST":
+        check_csrf()
+        title = request.form["title"]
+        description = request.form["description"]
+        release_year = request.form["release_year"]
+        check_movie_fields(title, description, release_year)
+        classes = parse_classes(request.form.getlist("classes"))
+
+        movies.update_movie(movie_id, title, description, int(release_year), classes)
+        flash("Elokuva päivitetty")
+        return redirect("/movie/" + str(movie_id))
+
+@app.route("/remove_movie/<int:movie_id>", methods=["GET", "POST"])
+def remove_movie(movie_id):
+    require_login()
+    movie = movies.get_movie(movie_id)
+    if not movie:
+        abort(404)
+    if movie["user_id"] != session["user_id"]:
+        abort(403)
+
+    if request.method == "GET":
+        return render_template("remove_movie.html", movie=movie)
+
+    if request.method == "POST":
+        check_csrf()
+        if "continue" in request.form:
+            movies.remove_movie(movie_id)
+            flash("Elokuva poistettu")
+            return redirect("/")
+        return redirect("/movie/" + str(movie_id))
 
 @app.route("/register", methods=["GET", "POST"])
 def register():

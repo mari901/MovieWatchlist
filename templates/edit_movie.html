@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block title %}Muokkaa elokuvaa{% endblock %}
+
+{% block content %}
+<h2>Muokkaa elokuvaa</h2>
+{% set action = "/edit_movie/" ~ movie.id %}
+{% set button = "Tallenna" %}
+{% include "movie_form.html" %}
+{% endblock %}

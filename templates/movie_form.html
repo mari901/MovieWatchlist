@@ -1,0 +1,26 @@
+<form action="{{ action }}" method="post">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <p>
+    <label for="title">Otsikko</label>: <br />
+    <input type="text" name="title" id="title" maxlength="100" value="{{ movie.title if movie else '' }}" required />
+  </p>
+  <p>
+    <label for="release_year">Julkaisuvuosi</label>: <br />
+    <input type="text" name="release_year" id="release_year" size="6" pattern="[0-9]{4}" value="{{ movie.release_year if movie else '' }}" required />
+  </p>
+  <p>
+    <label for="description">Kuvaus</label>: <br />
+    <textarea name="description" id="description" rows="6" cols="60" maxlength="1000" required>{{ movie.description if movie else '' }}</textarea>
+  </p>
+  {% for class in all_classes %}
+  <p>
+    <label for="class{{ class }}">{{ class }}</label>: <br />
+    <select name="classes" id="class{{ class }}" multiple>
+      {% for option in all_classes[class] %}
+      <option value="{{ class }}:{{ option }}" {% if class ~ ":" ~ option in selected %}selected{% endif %}>{{ option }}</option>
+      {% endfor %}
+    </select>
+  </p>
+  {% endfor %}
+  <input type="submit" value="{{ button }}" />
+</form>

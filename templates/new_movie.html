@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block title %}Uusi elokuva{% endblock %}
+
+{% block content %}
+<h2>Uusi elokuva</h2>
+{% set action = "/create_movie" %}
+{% set button = "Lisää elokuva" %}
+{% set movie = none %}
+{% set selected = [] %}
+{% include "movie_form.html" %}
+{% endblock %}
