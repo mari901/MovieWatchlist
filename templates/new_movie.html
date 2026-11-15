@@ -6,7 +6,7 @@
 <h2>New movie</h2>
 {% set action = "/create_movie" %}
 {% set button = "Add movie" %}
-{% set movie = none %}
-{% set selected = [] %}
+{% set movie = movie or none %}
+{% set selected = selected or [] %}
 {% include "movie_form.html" %}
 {% endblock %}

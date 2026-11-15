@@ -49,10 +49,25 @@ def check_movie_fields(title, description, release_year):
         abort(403)
     if not description.strip() or len(description) > 1000:
         abort(403)
-    if not re.search("^[0-9]{4}$", release_year):
+    if not re.fullmatch("[0-9]{4}", release_year):
         abort(403)
     if not 1888 <= int(release_year) <= 2100:
         abort(403)
+
+def decade_matches(release_year, classes):
+    decade = str(int(release_year) // 10 * 10) + "s"
+    for class_title, class_value in classes:
+        if class_title == "Decade" and class_value != decade:
+            return False
+    return True
+
+def show_movie_form(template, movie, classes):
+    selected = set()
+    for class_title, class_value in classes:
+        selected.add(class_title + ":" + class_value)
+    return render_template(template, movie=movie, selected=selected,
+                           all_classes=movies.get_all_classes(),
+                           multi_value_classes=MULTI_VALUE_CLASSES)
 
 @app.route("/")
 def index():
@@ -95,6 +110,12 @@ def create_movie():
     check_movie_fields(title, description, release_year)
     classes = parse_classes(request.form.getlist("classes"))
 
+    if not decade_matches(release_year, classes):
+        flash("ERROR: The decade does not match the release year")
+        filled = {"title": title, "description": description,
+                  "release_year": release_year}
+        return show_movie_form("new_movie.html", filled, classes)
+
     movie_id = movies.add_movie(title, description, int(release_year),
                                 session["user_id"], classes)
     flash("Movie added")
@@ -126,6 +147,12 @@ def edit_movie(movie_id):
         release_year = request.form["release_year"]
         check_movie_fields(title, description, release_year)
         classes = parse_classes(request.form.getlist("classes"))
+
+        if not decade_matches(release_year, classes):
+            flash("ERROR: The decade does not match the release year")
+            filled = {"id": movie_id, "title": title, "description": description,
+                      "release_year": release_year}
+            return show_movie_form("edit_movie.html", filled, classes)
 
         movies.update_movie(movie_id, title, description, int(release_year), classes)
         flash("Movie updated")
