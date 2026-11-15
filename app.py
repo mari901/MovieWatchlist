@@ -141,6 +141,9 @@ def remove_movie(movie_id):
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if "user_id" in session:
+        return redirect("/")
+
     if request.method == "GET":
         return render_template("register.html", filled={})
 
