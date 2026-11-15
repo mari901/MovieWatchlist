@@ -27,6 +27,12 @@ $ sqlite3 database.db < schema.sql
 $ sqlite3 database.db < init.sql
 ```
 
+Optional: add a sample set of 24 films, three from each decade:
+
+```
+$ python seed.py
+```
+
 Start the application:
 
 ```
