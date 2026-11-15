@@ -1,30 +1,10 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Movie Watchlist</title>
-</head>
+{% block title %}Movie Watchlist{% endblock %}
 
-<body>
-  <h1>Movie Watchlist</h1>
-
-  {% for message in get_flashed_messages() %}
-  <p><b>{{ message }}</b></p>
-  {% endfor %}
-
-  {% if session.user_id %}
-  <p>
-    Olet kirjautunut nimellä {{ session.username }}
-  </p>
-  <p>
-    <a href="/logout">Kirjaudu ulos</a>
-  </p>
-  {% else %}
-  <p>
-    <a href="/login">Kirjaudu sisään</a> |
-    <a href="/register">Luo tunnus</a>
-  </p>
-  {% endif %}
-</body>
-
-</html>
+{% block content %}
+<h2>Etusivu</h2>
+{% if session.user_id %}
+<p>Olet kirjautunut nimellä {{ session.username }}</p>
+{% endif %}
+{% endblock %}
