@@ -13,9 +13,12 @@ def get_all_classes():
     return classes
 
 def get_movies():
-    sql = """SELECT m.id, m.title, m.release_year, u.id user_id, u.username
-             FROM movies m, users u
-             WHERE m.user_id = u.id
+    sql = """SELECT m.id, m.title, m.release_year, u.id user_id, u.username,
+                    GROUP_CONCAT(c.value, ', ') genres
+             FROM movies m JOIN users u ON m.user_id = u.id
+                           LEFT JOIN movie_classes c
+                           ON c.movie_id = m.id AND c.title = 'Genre'
+             GROUP BY m.id
              ORDER BY m.id DESC"""
     return db.query(sql)
 

@@ -5,16 +5,24 @@
 {% block content %}
 <h2>Movies</h2>
 
-{% for movie in movies %}
-<div class="thread">
-  <p>
-    <a href="/movie/{{ movie.id }}">{{ movie.title }}</a> ({{ movie.release_year }})
-  </p>
-  <p>
-    Added by: <a href="/user/{{ movie.user_id }}">{{ movie.username }}</a>
-  </p>
-</div>
+{% if movies %}
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Year</th>
+    <th>Genre</th>
+    <th>Added by</th>
+  </tr>
+  {% for movie in movies %}
+  <tr>
+    <td><a href="/movie/{{ movie.id }}">{{ movie.title }}</a></td>
+    <td>{{ movie.release_year }}</td>
+    <td>{{ movie.genres or "" }}</td>
+    <td><a href="/user/{{ movie.user_id }}">{{ movie.username }}</a></td>
+  </tr>
+  {% endfor %}
+</table>
 {% else %}
 <p>No movies yet.</p>
-{% endfor %}
+{% endif %}
 {% endblock %}
