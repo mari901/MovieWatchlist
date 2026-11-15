@@ -1,5 +1,7 @@
 import db
 
+MAX_ID = 2**63 - 1
+
 def get_all_classes():
     sql = "SELECT title, value FROM classes ORDER BY id"
     result = db.query(sql)
@@ -23,6 +25,8 @@ def get_movies():
     return db.query(sql)
 
 def get_movie(movie_id):
+    if movie_id > MAX_ID:
+        return None
     sql = """SELECT m.id, m.title, m.description, m.release_year,
                     u.id user_id, u.username
              FROM movies m, users u
