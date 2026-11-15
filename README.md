@@ -35,12 +35,6 @@ $ python seed.py
 
 Run it only on a new database. The script refuses to run if the test users already exist. All seeded users have the password `seed-password`.
 
-## Test data
-
-`data/films.csv` lists 751 films from 1950 to 2024 with their release year and one or more genres. The titles, years and genres come from Wikidata, which publishes its data under the CC0 public-domain dedication. Only films with a genre matching one of the genres in `init.sql` are included. The genres are mapped from Wikidata's labels by keyword, so, for example, "stand-up comedy" becomes Comedy, and Comedy is the largest genre in the file.
-
-`seed.py` gives each of its 80 movie rows a random film from this list, a random seeded user as its owner, one random genre, and the decade of the film's release year. Each movie description is the same placeholder text. Repeats are possible but unlikely with 80 movies. The random generator uses a fixed seed, so every run creates the same data.
-
 Start the application:
 
 ```
@@ -48,6 +42,12 @@ $ flask run
 ```
 
 Then open http://127.0.0.1:5000 in a browser.
+
+## Test data
+
+`data/films.csv` lists 751 films from 1950 to 2024 with their release year and one or more genres. The titles, years and genres come from Wikidata, which publishes its data under the CC0 public-domain dedication. Only films with a genre matching one of the genres in `init.sql` are included. The genres are mapped from Wikidata's labels by keyword, so, for example, "stand-up comedy" becomes Comedy, and Comedy is the largest genre in the file.
+
+`seed.py` gives each of its 80 movie rows a random film from this list, a random seeded user as its owner, one random genre, and the decade of the film's release year. Each movie description is the same placeholder text. Repeats are possible but unlikely with 80 movies. The random generator uses a fixed seed, so every run creates the same data.
 
 ## Testing
 
