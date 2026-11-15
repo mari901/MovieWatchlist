@@ -1,28 +1,28 @@
 {% extends "layout.html" %}
 
-{% block title %}Haku{% endblock %}
+{% block title %}Search{% endblock %}
 
 {% block content %}
-<h2>Hae elokuvia</h2>
+<h2>Search movies</h2>
 
 <form action="/search" method="get">
   <p>
-    <label for="query">Hakusana</label>:
+    <label for="query">Search term</label>:
     <input type="text" name="query" id="query" value="{{ query }}" />
   </p>
-  <input type="submit" value="Hae" />
+  <input type="submit" value="Search" />
 </form>
 
 {% if query %}
 <hr />
-<h2>Tulokset</h2>
+<h2>Results</h2>
 <ul>
   {% for movie in results %}
   <li>
-    <a href="/movie/{{ movie.id }}">{{ movie.title }}</a> ({{ movie.release_year }}), lisääjä {{ movie.username }}
+    <a href="/movie/{{ movie.id }}">{{ movie.title }}</a> ({{ movie.release_year }}), added by {{ movie.username }}
   </li>
   {% else %}
-  <li>Ei tuloksia.</li>
+  <li>No results.</li>
   {% endfor %}
 </ul>
 {% endif %}

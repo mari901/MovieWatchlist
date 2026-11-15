@@ -86,7 +86,7 @@ def create_movie():
 
     movie_id = movies.add_movie(title, description, int(release_year),
                                 session["user_id"], classes)
-    flash("Elokuva lisätty")
+    flash("Movie added")
     return redirect("/movie/" + str(movie_id))
 
 @app.route("/edit_movie/<int:movie_id>", methods=["GET", "POST"])
@@ -116,7 +116,7 @@ def edit_movie(movie_id):
         classes = parse_classes(request.form.getlist("classes"))
 
         movies.update_movie(movie_id, title, description, int(release_year), classes)
-        flash("Elokuva päivitetty")
+        flash("Movie updated")
         return redirect("/movie/" + str(movie_id))
 
 @app.route("/remove_movie/<int:movie_id>", methods=["GET", "POST"])
@@ -135,7 +135,7 @@ def remove_movie(movie_id):
         check_csrf()
         if "continue" in request.form:
             movies.remove_movie(movie_id)
-            flash("Elokuva poistettu")
+            flash("Movie removed")
             return redirect("/")
         return redirect("/movie/" + str(movie_id))
 
@@ -153,14 +153,14 @@ def register():
         abort(403)
 
     if password1 != password2:
-        flash("VIRHE: Antamasi salasanat eivät ole samat")
+        flash("ERROR: The passwords do not match")
         return render_template("register.html", filled={"username": username})
 
     if users.create_user(username, password1):
-        flash("Tunnuksen luominen onnistui, voit nyt kirjautua sisään")
+        flash("Account created, you can now log in")
         return redirect("/")
 
-    flash("VIRHE: Valitsemasi tunnus on jo varattu")
+    flash("ERROR: That username is already taken")
     return render_template("register.html", filled={"username": username})
 
 @app.route("/login", methods=["GET", "POST"])
@@ -179,7 +179,7 @@ def login():
         session["csrf_token"] = secrets.token_hex(16)
         return redirect(next_page)
 
-    flash("VIRHE: Väärä tunnus tai salasana")
+    flash("ERROR: Wrong username or password")
     return render_template("login.html", next_page=next_page)
 
 @app.route("/logout")

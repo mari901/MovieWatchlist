@@ -7,8 +7,8 @@
 
 {% if session.user_id == movie.user_id %}
 <p>
-  <a href="/edit_movie/{{ movie.id }}">Muokkaa</a> |
-  <a href="/remove_movie/{{ movie.id }}">Poista</a>
+  <a href="/edit_movie/{{ movie.id }}">Edit</a> |
+  <a href="/remove_movie/{{ movie.id }}">Remove</a>
 </p>
 {% endif %}
 
@@ -18,7 +18,7 @@
   {% for entry in classes %}
   <li>{{ entry.title }}: {{ entry.value }}</li>
   {% endfor %}
-  <li>Lisääjä: <a href="/user/{{ movie.user_id }}">{{ movie.username }}</a></li>
+  <li>Added by: <a href="/user/{{ movie.user_id }}">{{ movie.username }}</a></li>
 </ul>
-<p><a href="/">Takaisin listaan</a></p>
+<p><a href="/">Back to list</a></p>
 {% endblock %}
