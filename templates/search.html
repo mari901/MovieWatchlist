@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}Haku{% endblock %}
+
+{% block content %}
+<h2>Hae elokuvia</h2>
+
+<form action="/search" method="get">
+  <p>
+    <label for="query">Hakusana</label>:
+    <input type="text" name="query" id="query" value="{{ query }}" />
+  </p>
+  <input type="submit" value="Hae" />
+</form>
+
+{% if query %}
+<hr />
+<h2>Tulokset</h2>
+<ul>
+  {% for movie in results %}
+  <li>
+    <a href="/movie/{{ movie.id }}">{{ movie.title }}</a> ({{ movie.release_year }}), lisääjä {{ movie.username }}
+  </li>
+  {% else %}
+  <li>Ei tuloksia.</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
