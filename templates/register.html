@@ -11,12 +11,12 @@
     <input type="text" name="username" id="username" value="{{ filled.username }}" maxlength="16" required />
   </p>
   <p>
-    <label for="password1">Password</label>: <br />
-    <input type="password" name="password1" id="password1" required />
+    <label for="password1">Password</label> (at least 8 characters): <br />
+    <input type="password" name="password1" id="password1" minlength="8" maxlength="100" required />
   </p>
   <p>
     <label for="password2">Password again</label>: <br />
-    <input type="password" name="password2" id="password2" required />
+    <input type="password" name="password2" id="password2" minlength="8" maxlength="100" required />
   </p>
   <input type="submit" value="Create account" />
 </form>

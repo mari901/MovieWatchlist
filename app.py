@@ -45,9 +45,9 @@ def parse_classes(entries):
     return classes
 
 def check_movie_fields(title, description, release_year):
-    if not title or len(title) > 100:
+    if not title.strip() or len(title) > 100:
         abort(403)
-    if not description or len(description) > 1000:
+    if not description.strip() or len(description) > 1000:
         abort(403)
     if not re.search("^[0-9]{4}$", release_year):
         abort(403)
@@ -164,8 +164,12 @@ def register():
         abort(403)
     password1 = request.form["password1"]
     password2 = request.form["password2"]
-    if not password1:
+    if len(password1) < 8 or len(password1) > 100:
         abort(403)
+
+    if username != username.strip():
+        flash("ERROR: The username cannot start or end with a space")
+        return render_template("register.html", filled={"username": username})
 
     if password1 != password2:
         flash("ERROR: The passwords do not match")
